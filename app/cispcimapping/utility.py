@@ -6,6 +6,12 @@ class Utility(object):
     """This is a collection of widely-used functions"""
 
     @classmethod
+    def date_to_iso8601(cls, date_obj):
+        """Returns an ISO8601-formatted string for datetime arg"""
+        retval = date_obj.isoformat()
+        return retval
+
+    @classmethod
     def log_stdout(cls, message, component="CIS-PCI_Mapping"):
         """Log messages to stdout.
 

@@ -3,6 +3,7 @@ import base64
 import json
 import urllib.parse
 import urllib.request
+from datetime import datetime
 from . import utility
 
 import cloudpassage
@@ -236,7 +237,8 @@ class HaloAPICaller(object):
                             2] + ', PCI_Description: ' + pci_info_elmnt[3])
                         rule.update(name='PCI-DSS-' + pci_info_elmnt[1] + '-' + current_rule_name)
                 plc_rules_lst.append(rule)
-        policy_details['policy']['name'] = self.target_policy_name + "_with-pci"
+        current_time = utility.Utility.date_to_iso8601(datetime.now())
+        policy_details['policy']['name'] = "PCI-DSS_" + self.target_policy_name + "_" + current_time
         policy_details['policy']['rules'] = plc_rules_lst
         return policy_details
 
