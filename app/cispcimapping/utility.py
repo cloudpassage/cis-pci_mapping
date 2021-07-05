@@ -1,0 +1,30 @@
+from __future__ import print_function
+import sys
+
+
+class Utility(object):
+    """This is a collection of widely-used functions"""
+
+    @classmethod
+    def log_stdout(cls, message, component="CIS-PCI_Mapping"):
+        """Log messages to stdout.
+
+        Args:
+            message(str): Message to be logged to stdout.
+            component(str): Component name. Defaults to "CIS-PCI_Mapping".
+        """
+        out = "%s: %s" % (component, message)
+        print(out, file=sys.stdout)
+        return
+
+    @classmethod
+    def log_stderr(cls, message, component="CIS-PCI_Mapping"):
+        """Log messages to stderr.
+
+        Args:
+            message(str): Message to be logged to stdout.
+            component(str): Component name. Defaults to "CIS-PCI_Mapping".
+        """
+        out = "%s: %s" % (component, message)
+        print(out, file=sys.stderr)
+        return
