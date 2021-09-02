@@ -22,3 +22,9 @@ class Status(enum.Enum):
 class TargetType(enum.Enum):
     server = 1
     csp_account = 2
+
+
+class MappingType(enum.Enum):
+    pci = 'PCI'
+    hipaa = 'HIPAA'
+    nist = 'NIST'

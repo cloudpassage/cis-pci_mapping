@@ -18,6 +18,7 @@ class ConfigHelper(object):
         halo_api_auth_token (str): Halo API authentication token
         target_policy_name (str): Name of the policy which its' rules will be mapped from CIS to PCI
         mapping_file_name (str): Name of the document/sheet which contains the mapping rules
+        mapping_type (str): Target Mapping Type (PCI, HIPAA, NIST)
     """
 
     def __init__(self):
@@ -30,7 +31,10 @@ class ConfigHelper(object):
         self.halo_api_auth_args = {'grant_type': 'client_credentials'}
         self.halo_api_auth_token = None
         self.target_policy_name = os.getenv("TARGET_POLICY_NAME", "HARDSTOP")
-        self.mapping_file_name = "Ubuntu-CIS-Control-PCD-DSS-mapping.xlsx"
+        self.mapping_file_name =  os.getenv("MAPPING_FILE_NAME", "Ubuntu-CIS-Control-PCD-DSS-mapping.xlsx")
+        self.sheet_name = os.getenv("SHEET_NAME", "Sheet2")
+        self.excel_engine_type = "openpyxl"
+        self.mapping_type = os.getenv("MAPPING_TYPE", "PCI")
 
     def sane(self):
 

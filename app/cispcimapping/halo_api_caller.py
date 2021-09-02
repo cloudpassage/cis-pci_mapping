@@ -4,9 +4,10 @@ import json
 import urllib.parse
 import urllib.request
 from datetime import datetime
-from . import utility
 
 import cloudpassage
+
+from . import utility
 
 
 class HaloAPICaller(object):
@@ -22,6 +23,9 @@ class HaloAPICaller(object):
         self.halo_api_auth_token = config.halo_api_auth_token
         self.target_policy_name = config.target_policy_name
         self.mapping_file_name = config.mapping_file_name
+        self.sheet_name = config.sheet_name
+        self.excel_engine_type = config.excel_engine_type
+        self.mapping_type = config.mapping_type
 
     # Dump debug info
     @classmethod
@@ -223,7 +227,7 @@ class HaloAPICaller(object):
                 target_policy_id = policy['id']
         return target_policy_id
 
-    def extract_policy_rules_have_pci(self, policy_details_tuple, cp_rule_id_lst, pci_info_lst):
+    def extract_policy_rules_have_pci(self, policy_details_tuple, cp_rule_id_lst, fltrd_pcirule_lst):
         policy_details = policy_details_tuple[0]
         rule_id_lst_has_pci = cp_rule_id_lst
         plc_rules_lst = []
@@ -231,14 +235,55 @@ class HaloAPICaller(object):
             current_rule_id = rule.get('cp_rule_id')
             current_rule_name = rule.get('name')
             if current_rule_id in rule_id_lst_has_pci:
-                for pci_info_elmnt in pci_info_lst:
-                    if pci_info_elmnt[0] == current_rule_id:
-                        rule.update(user_notes='PCI-DSS Req: ' + pci_info_elmnt[1] + ', PCI_Title: ' + pci_info_elmnt[
-                            2] + ', PCI_Description: ' + pci_info_elmnt[3])
-                        rule.update(name='PCI-DSS-' + pci_info_elmnt[1] + '-' + current_rule_name)
+                for pci_ruleinfo_elmnt in fltrd_pcirule_lst:
+                    if pci_ruleinfo_elmnt[0] == current_rule_id:
+                        rule.update(
+                            user_notes='PCI-DSS Req: ' + pci_ruleinfo_elmnt[1] + ', PCI_Title: ' + pci_ruleinfo_elmnt[
+                                2] + ', PCI_Description: ' + pci_ruleinfo_elmnt[3])
+                        rule.update(name='PCI-DSS-' + pci_ruleinfo_elmnt[1] + '-' + current_rule_name)
                 plc_rules_lst.append(rule)
         current_time = utility.Utility.date_to_iso8601(datetime.now())
         policy_details['policy']['name'] = "PCI-DSS_" + self.target_policy_name + "_" + current_time
+        policy_details['policy']['rules'] = plc_rules_lst
+        return policy_details
+
+    def extract_policy_rules_have_hipaa(self, policy_details_tuple, cp_rule_id_lst, fltrd_hipaarule_lst):
+        policy_details = policy_details_tuple[0]
+        rule_id_lst_has_hipaa = cp_rule_id_lst
+        plc_rules_lst = []
+        for rule in policy_details['policy']['rules']:
+            current_rule_id = rule.get('cp_rule_id')
+            current_rule_name = rule.get('name')
+            if current_rule_id in rule_id_lst_has_hipaa:
+                for hipaa_ruleinfo_elmnt in fltrd_hipaarule_lst:
+                    if hipaa_ruleinfo_elmnt[0] == current_rule_id:
+                        rule.update(user_notes='HIPAA Req: ' + hipaa_ruleinfo_elmnt[1] + ', HIPAA_Title: ' +
+                                               hipaa_ruleinfo_elmnt[
+                                                   2] + ', HIPAA_Description: ' + hipaa_ruleinfo_elmnt[3])
+                        rule.update(name='HIPAA-' + hipaa_ruleinfo_elmnt[1] + '-' + current_rule_name)
+                plc_rules_lst.append(rule)
+        current_time = utility.Utility.date_to_iso8601(datetime.now())
+        policy_details['policy']['name'] = "HIPAA_" + self.target_policy_name + "_" + current_time
+        policy_details['policy']['rules'] = plc_rules_lst
+        return policy_details
+
+    def extract_policy_rules_have_nist(self, policy_details_tuple, cp_rule_id_lst, fltrd_nistrule_lst):
+        policy_details = policy_details_tuple[0]
+        rule_id_lst_has_nist = cp_rule_id_lst
+        plc_rules_lst = []
+        for rule in policy_details['policy']['rules']:
+            current_rule_id = rule.get('cp_rule_id')
+            current_rule_name = rule.get('name')
+            if current_rule_id in rule_id_lst_has_nist:
+                for nist_ruleinfo_elmnt in fltrd_nistrule_lst:
+                    if nist_ruleinfo_elmnt[0] == current_rule_id:
+                        rule.update(
+                            user_notes='NIST Req: ' + nist_ruleinfo_elmnt[1] + ', NIST_Title: ' + nist_ruleinfo_elmnt[
+                                2] + ', NIST_Description: ' + nist_ruleinfo_elmnt[3])
+                        rule.update(name='NIST-' + nist_ruleinfo_elmnt[1] + '-' + current_rule_name)
+                plc_rules_lst.append(rule)
+        current_time = utility.Utility.date_to_iso8601(datetime.now())
+        policy_details['policy']['name'] = "NIST_" + self.target_policy_name + "_" + current_time
         policy_details['policy']['rules'] = plc_rules_lst
         return policy_details
 
