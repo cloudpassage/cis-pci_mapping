@@ -10,11 +10,13 @@ from cispcimapping import utility
 
 
 def main():
+
     utility.Utility.log_stdout("Mapping Script Started ...")
+
     config = config_helper.ConfigHelper()
+    utility.Utility.log_stdout("1- Creating HALO API CALLER Object.")
     halo_api_caller_obj = halo_api_caller.HaloAPICaller(config)
     mapping_type = config.mapping_type
-    utility.Utility.log_stdout("1- Creating HALO API CALLER Object.")
 
     """
     First we make sure that all configs are sound...
@@ -41,17 +43,18 @@ def main():
     utility.Utility.log_stdout("5- Retrieving target configuration policy details")
     csm_plc_det = halo_api_caller_obj.get_configuration_policy_details(target_policy_id)
 
-    """
-    Parsing the mapping document/sheet and creating list of rules having PCI/HIPAA/NIST mapping info and ignore rules with no PCI/HIPAA/NIST mapping info 
-    """
+    """Parsing the mapping document/sheet and creating list of rules having PCI/HIPAA/NIST mapping info and ignore 
+    rules with no PCI/HIPAA/NIST mapping info """
     utility.Utility.log_stdout(
-        "6- Parsing the mapping document/sheet and creating list of rules having PCI/HIPAA/NIST mapping info and ignore rules with no PCI/HIPAA/NIST mapping info")
+        "6- Parsing the mapping document/sheet and creating list of rules having PCI/HIPAA/NIST mapping info and "
+        "ignore rules with no PCI/HIPAA/NIST mapping info")
     parent_dir_name = os.path.dirname(__file__)
     # mapping_file_path = parent_dir_name + '/resources/'
     mapping_file_path = parent_dir_name.replace('\\', '/')
 
     excel_handler_obj = excel_handler.ExcelHandler()
-    df = excel_handler_obj.read_from_excel(halo_api_caller_obj.sheet_name, halo_api_caller_obj.mapping_file_name, mapping_file_path, halo_api_caller_obj.excel_engine_type)
+    df = excel_handler_obj.read_from_excel(halo_api_caller_obj.sheet_name, halo_api_caller_obj.mapping_file_name,
+                                           mapping_file_path, halo_api_caller_obj.excel_engine_type)
 
     cp_rule_id_lst = []
     fltrd_info_lst = []
@@ -90,11 +93,11 @@ def main():
                 cp_rule_id_lst.append(cp_rule_id)
                 fltrd_info_lst.append(fltrd_info_elmnt)
 
-    """
-    Filtering the rules of target configuration policy based on the list of rules that have PCI/HIPAA/NIST mapping info generated from the previous step
-    """
+    """Filtering the rules of target configuration policy based on the list of rules that have PCI/HIPAA/NIST mapping 
+    info generated from the previous step """
     utility.Utility.log_stdout(
-        "7- Filtering the rules of target configuration policy based on the list of rules that have PCI/HIPAA/NIST mapping info generated from the previous step")
+        "7- Filtering the rules of target configuration policy based on the list of rules that have PCI/HIPAA/NIST "
+        "mapping info generated from the previous step")
     if mapping_type == custom_enum.MappingType.pci.value:
         filtered_pcihipaanist_policy = halo_api_caller_obj.extract_policy_rules_have_pci(csm_plc_det, cp_rule_id_lst,
                                                                                          fltrd_info_lst)

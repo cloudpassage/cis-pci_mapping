@@ -31,6 +31,7 @@ class ConfigHelper(object):
         self.halo_api_auth_args = {'grant_type': 'client_credentials'}
         self.halo_api_auth_token = None
         self.target_policy_name = os.getenv("TARGET_POLICY_NAME", "HARDSTOP")
+        self.target_policy_id = os.getenv("TARGET_POLICY_ID", "")
         self.mapping_file_name =  os.getenv("MAPPING_FILE_NAME", "Ubuntu-CIS-Control-PCD-DSS-mapping.xlsx")
         self.sheet_name = os.getenv("SHEET_NAME", "Sheet2")
         self.excel_engine_type = "openpyxl"
