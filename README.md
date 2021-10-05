@@ -10,9 +10,11 @@ The main purpose of this tool is to map the provided configuration policy rules 
 - CIS Mapping Document.
 
 ## Installation:
-`git clone https://github.com/cloudpassage/cis-pci_mapping.git`
 
-`pip install -r requirements.txt`
+```
+    git clone https://github.com/cloudpassage/cis-pci_mapping.git
+    pip install -r requirements.txt
+```
 
 ## Configuration:
 | Variable | Value |
@@ -60,52 +62,42 @@ The script creates a call to the HALO API system and attach the JSON object crea
 ## How to run the tool (native python):
 The following commands are for running the mapping script.
 
-`cd cis-pci_mapping/app`
-
-`python runner.py`
+```
+    cd cis-pci_mapping/app
+    python runner.py
+```
 
 ## How to run the tool (containerized):
 Clone the code and build the container:
 
-`git clone https://github.com/cloudpassage/cis-pci_mapping.git`
-
-`cd cis-pci_mapping`
-
-`docker build -t cis-pci_mapping .`
+```
+    git clone https://github.com/cloudpassage/cis-pci_mapping.git
+    cd cis-pci_mapping
+    docker build -t cis-pci_mapping .
+```
 
 To run the container interactively (foreground):
 
+```
     docker run -it \
-
     -e HALO_API_KEY_ID=$HALO_API_KEY_ID \
-
     -e HALO_API_KEY_SECRET=$HALO_API_KEY_SECRET \
-
     -e TARGET_POLICY_NAME=$TARGET_POLICY_NAME \
-
     -e MAPPING_FILE_NAME=$MAPPING_FILE_NAME \
-
     -e SHEET_NAME=$SHEET_NAME \
-
     -e MAPPING_TYPE=$MAPPING_TYPE \
-
     cis-pci_mapping
-
+```
 
 If you want to run the container in the background, you can start it like this:
 
+```
     docker run -d \
-
-        -e HALO_API_KEY_ID=$HALO_API_KEY_ID \
-
-        -e HALO_API_KEY_SECRET=$HALO_API_KEY_SECRET \
-
-        -e TARGET_POLICY_NAME=$TARGET_POLICY_NAME \
-
-        -e MAPPING_FILE_NAME=$MAPPING_FILE_NAME \
-
-        -e SHEET_NAME=$SHEET_NAME \
-
-        -e MAPPING_TYPE=$MAPPING_TYPE \
-
-        cis-pci_mapping
+    -e HALO_API_KEY_ID=$HALO_API_KEY_ID \
+    -e HALO_API_KEY_SECRET=$HALO_API_KEY_SECRET \
+    -e TARGET_POLICY_NAME=$TARGET_POLICY_NAME \
+    -e MAPPING_FILE_NAME=$MAPPING_FILE_NAME \
+    -e SHEET_NAME=$SHEET_NAME \
+    -e MAPPING_TYPE=$MAPPING_TYPE \
+    cis-pci_mapping
+```
